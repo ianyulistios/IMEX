@@ -46,3 +46,35 @@ func TestDownloadImage(t *testing.T) {
 		t.Errorf("Image is not downloaded successfully")
 	}
 }
+
+func TestDownloadImageCustomMime(t *testing.T) {
+	instance := imex.InitImax(dummyURL)
+
+	image, err := instance.DownloadFile().ToImage("jpeg")
+
+	if err != nil {
+		t.Errorf(err.Error())
+	}
+
+	if image == "" {
+		t.Errorf("Image is not downloaded successfully")
+	}
+}
+
+func TestDownloadAsByte(t *testing.T) {
+	instance := imex.InitImax(dummyURL)
+
+	image, mimeType, err := instance.DownloadFile().ToByte()
+
+	if err != nil {
+		t.Errorf(err.Error())
+	}
+
+	if mimeType == "" {
+		t.Errorf("Image is not downloaded successfully")
+	}
+
+	if image == nil {
+		t.Errorf("Image is not downloaded successfully")
+	}
+}

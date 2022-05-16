@@ -62,10 +62,26 @@ func (i *ImexAgent) ToImage(customMime ...string) (string, error) {
 		imageType += "-"
 	}
 
+	for _, mimeData := range customMime {
+		if mimeData != "" {
+			imageType = "data:image/" + mimeData + ";base64"
+		}
+	}
+
 	if imageType == "-" {
 		return "", errors.New("invalid mime type")
 	}
 
 	dataImage = imageType + src.ToBase64(extracted)
 	return dataImage, errorData
+}
+
+func (i *ImexAgent) ToByte() ([]byte, string, error) {
+	if i.ErrorData != nil {
+		return nil, "", i.ErrorData
+	}
+
+	extractedDataBytes, mimeType, err := src.ReadResponse(i.RawFile)
+
+	return extractedDataBytes, mimeType, err
 }
