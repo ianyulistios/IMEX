@@ -43,5 +43,14 @@ The Raw File that already downloaded can be consumed as ```io.ReadCloser```.
 image, err := instance.DownloadFile().ToImage()
 ```
 
+With Custom Mimetype
+```
+image, err := instance.DownloadFile().ToImage("jpeg")
+```
+
+- **Convert to image byte formated**
+```
+imageByte, mimeType, err := instance.DownloadFile().ToByte()
+```
 # LICENSE
 IMEX is MIT License.
