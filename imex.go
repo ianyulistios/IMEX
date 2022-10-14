@@ -64,7 +64,7 @@ func (i *ImexAgent) ToImage(customMime ...string) (string, error) {
 
 	for _, mimeData := range customMime {
 		if mimeData != "" {
-			imageType = "data:image/" + mimeData + ";base64"
+			imageType = "data:image/" + mimeData + ";base64,"
 		}
 	}
 
