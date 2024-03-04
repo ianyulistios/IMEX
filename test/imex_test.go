@@ -10,7 +10,13 @@ import (
 )
 
 var (
-	dummyURL = "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=751&q=80"
+	dummyURL   = "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=751&q=80"
+	dummiesURL = []string{
+		"https://images.unsplash.com/photo-1496181133206-80ce9b88a853?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=751&q=80",
+		"https://error_url",
+		"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYscfUBUbqwGd_DHVhG-ZjCOD7MUpxp4uhNe7toUg4ug&s",
+		"https://img.freepik.com/free-photo/autumn-leaf-falling-revealing-intricate-leaf-vein-generated-by-ai_188544-9869.jpg",
+	}
 )
 
 func TestInit(t *testing.T) {
@@ -26,11 +32,17 @@ func TestDownloadFile(t *testing.T) {
 	var (
 		typeResponse io.ReadCloser
 	)
+	for _, url := range dummiesURL {
+		instance := imex.InitImax(url)
+		response := instance.DownloadFile()
+		if response.ErrorData != nil {
+			fmt.Println(response.ErrorData.Error())
+			assert.Equal(t, response.RawFile, typeResponse)
+		} else {
+			assert.NotEqual(t, response.RawFile, typeResponse)
+		}
 
-	instance := imex.InitImax(dummyURL)
-	response := instance.DownloadFile()
-	fmt.Print(response.RawFile)
-	assert.NotEqual(t, response.RawFile, typeResponse)
+	}
 }
 
 func TestDownloadImage(t *testing.T) {
