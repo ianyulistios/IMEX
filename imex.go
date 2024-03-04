@@ -26,9 +26,14 @@ func (i *ImexAgent) GetData() *ImexAgent {
 
 func (i *ImexAgent) DownloadFile() *ImexAgent {
 	res, err := http.Get(i.FileURL)
-	if err != nil && res.StatusCode != 200 {
+	if err != nil {
 		i.ErrorData = err
 		return i
+	}
+	if res.StatusCode != 200 {
+		i.ErrorData = errors.New("something went wrong with this url: " + i.FileURL + " status code: " + res.Status)
+		return i
+
 	}
 	i.RawFile = res.Body
 	return i
