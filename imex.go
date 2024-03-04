@@ -30,6 +30,7 @@ func (i *ImexAgent) DownloadFile() *ImexAgent {
 		i.ErrorData = err
 		return i
 	}
+	defer res.Body.Close()
 	i.RawFile = res.Body
 	return i
 }
