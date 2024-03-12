@@ -90,3 +90,31 @@ func TestDownloadAsByte(t *testing.T) {
 		t.Errorf("Image is not downloaded successfully")
 	}
 }
+
+func TestDownloadToByteAndClose(t *testing.T) {
+	for _, url := range dummiesURL {
+		instance := imex.InitImax(url)
+		image, mimeType, err := instance.DownloadFile().ToByte()
+
+		if err == nil {
+			assert.NotEqual(t, image, nil)
+			assert.NotEqual(t, mimeType, "")
+		} else {
+			assert.Equal(t, image, nil)
+			assert.Equal(t, mimeType, "")
+		}
+
+		instance.Close()
+	}
+}
+
+func TestFailonClosedFile(t *testing.T) {
+	for _, url := range dummiesURL {
+		instance := imex.InitImax(url)
+		instance.DownloadFile().Close()
+		_, mimeType, err := instance.ToByte()
+
+		assert.NotEqual(t, err, nil)
+		assert.Equal(t, mimeType, "")
+	}
+}
