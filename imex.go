@@ -30,8 +30,6 @@ func (i *ImexAgent) DownloadFile() *ImexAgent {
 		i.ErrorData = err
 		return i
 	}
-  
-  defer res.Body.Close()
 	if res.StatusCode != 200 {
 		i.ErrorData = errors.New("something went wrong with this url: " + i.FileURL + " status code: " + res.Status)
 		return i
@@ -91,4 +89,10 @@ func (i *ImexAgent) ToByte() ([]byte, string, error) {
 	extractedDataBytes, mimeType, err := src.ReadResponse(i.RawFile)
 
 	return extractedDataBytes, mimeType, err
+}
+
+func (i *ImexAgent) Close() {
+	if i.RawFile != nil {
+		i.RawFile.Close()
+	}
 }
