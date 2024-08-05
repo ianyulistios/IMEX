@@ -11,6 +11,7 @@ import (
 type ImexAgent struct {
 	FileURL   string
 	RawFile   io.ReadCloser
+	Header    http.Header
 	ErrorData error
 }
 
@@ -36,6 +37,7 @@ func (i *ImexAgent) DownloadFile() *ImexAgent {
 
 	}
 	i.RawFile = res.Body
+	i.Header = res.Header
 	return i
 }
 
@@ -51,20 +53,16 @@ func (i *ImexAgent) ToImage(customMime ...string) (string, error) {
 		return dataImage, errorData
 	}
 
-	extracted, mimeType, err := src.ReadResponse(i.RawFile)
+	extracted, _, err := src.ReadResponse(i.RawFile)
 	if err != nil {
 		return dataImage, err
 	}
 
-	switch mimeType {
-	case "image/jpeg":
-		imageType += "data:image/jpeg;base64,"
-	case "image/png":
-		imageType += "data:image/png;base64,"
-	case "image/jpg":
-		imageType += "data:image/jpg;base64,"
-	default:
-		imageType += "-"
+	mimeType := i.Header["Content-Type"]
+	if len(mimeType) == 0 {
+		imageType = "-"
+	} else {
+		imageType += "data:" + mimeType[0] + ";base64,"
 	}
 
 	for _, mimeData := range customMime {
