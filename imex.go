@@ -9,10 +9,11 @@ import (
 )
 
 type ImexAgent struct {
-	FileURL   string
-	RawFile   io.ReadCloser
-	Header    http.Header
-	ErrorData error
+	FileURL       string
+	RawFile       io.ReadCloser
+	Header        http.Header
+	ContentLength int64
+	ErrorData     error
 }
 
 func InitImax(url string) *ImexAgent {
@@ -38,6 +39,7 @@ func (i *ImexAgent) DownloadFile() *ImexAgent {
 	}
 	i.RawFile = res.Body
 	i.Header = res.Header
+	i.ContentLength = res.ContentLength
 	return i
 }
 
